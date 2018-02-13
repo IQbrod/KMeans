@@ -32,8 +32,22 @@ if not (gFName.startswith(gREP)):
 	gFName = gREP + gFName
 
 ## MAIN ##
+repMatrix = []
 with open(gFName, "r") as gFile:
 	lFirstLine = gFile.readline().split(",")
-	#We ignore lFirstLine[0] that represents the amout of documents into the collection
+	lPageSize = int(lFirstLine[0])
 	lVocSize = int(lFirstLine[1])
-	print lVocSize
+
+	# For each page	
+	for j in range(0,lPageSize):
+		ligne = gFile.readline().split(" ")	
+		ligneflt = []
+		# For each word
+		for i in range(1,lVocSize+1):
+			ligneflt.append(0) #0 in any case
+			for el in range(1,len(ligne)):
+				if (ligne[el].startswith(str(i)+":")): #If words[i] is in page
+					ligneflt[i-1] = float(ligne[el][2:]) #We replace 0 by prob
+					break
+		repMatrix.append(ligneflt)
+print repMatrix
