@@ -1,3 +1,3 @@
 # KMeans
-K-Means Calculus
+K-Means Calculus  
 Check wiki for usage
