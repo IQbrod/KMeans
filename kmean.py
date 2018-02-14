@@ -1,7 +1,13 @@
 import sys
+import random
 
 class ArgError(Exception):
 	pass
+
+class Group:
+	def __init__(self,rep,col):
+		self.r = rep	# Representing Group
+		self.g = col	# Real Collection
 
 gEXT = ".txt"
 gREP = "files/"
@@ -38,6 +44,9 @@ with open(gFName, "r") as gFile:
 	lPageSize = int(lFirstLine[0])
 	lVocSize = int(lFirstLine[1])
 
+	if lPageSize < gK:
+		raise ArgError("[K] "+str(gK)+" is too high for "+sys.argv[2]+" => "+str(lPageSize)+" pages")
+
 	# For each page	
 	for j in range(0,lPageSize):
 		ligne = gFile.readline().split(" ")	
@@ -50,4 +59,22 @@ with open(gFName, "r") as gFile:
 					ligneflt[i-1] = float(ligne[el][2:]) #We replace 0 by prob
 					break
 		repMatrix.append(ligneflt)
-print repMatrix
+
+# -- Display File as Matrix
+print "Representation Matrix:"
+for i in range(0,len(repMatrix)):
+	print repMatrix[i]
+print
+	
+# -- Initialization
+print "Group Initialization:"
+C = [i for i in range(lPageSize)] # Random pages of C will initialize K
+gGroupList = []
+for i in range(0,gK): # Create K Groups
+	random.shuffle(C)
+	# We add a document as representation of the group and we add this page in the collection
+	gGroupList.append(Group( repMatrix[C[0]], [C[0]] ))
+	C = C[1:]
+		
+	print "Group"+str(i)+" => Doc"+str(gGroupList[i].g[0])
+	print "R:",gGroupList[i].r
