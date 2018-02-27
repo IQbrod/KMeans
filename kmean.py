@@ -1,7 +1,11 @@
+# CORE IMPORTS
 import sys
 import random
 import math
 from sklearn.datasets import load_iris
+# GRAPHICAL IMPORTS
+import matplotlib.pyplot as plt
+from sklearn.decomposition import PCA
 
 class ArgError(Exception):
 	pass
@@ -120,3 +124,17 @@ print "Final Groups:"
 for i in range(0,len(newGroupList)):
 	print "Group"+str(i)+":",newGroupList[i].g
 	print "R:",newGroupList[i].r
+
+## Display graphical view
+#2D Projection with PCA
+pca = PCA(n_components=2)
+mat = pca.fit(repMatrix).transform(repMatrix)
+#Display Clusters
+target_names = range(len(newGroupList)) #Label for clusters
+plt.figure()
+for i in range(0,len(newGroupList)): #For each group
+	for f in newGroupList[i].g: #For each doc
+		plt.scatter(mat[f,0], mat[f, 1])
+plt.legend(loc='best')
+plt.title('KMeans on IRIS')
+plt.show()
