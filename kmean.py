@@ -109,7 +109,14 @@ while True: #DO WHILE
 		# Append doc to the most similar group	
 		if gDisplay:
 			print "Doc"+str(i)+" => Group"+str(scal.index(min(scal)))
-		newGroupList[scal.index(min(scal))].g.append(i) #Modify minimum finding
+		# Minimum Calculus
+		lMin = []
+		for it in range(0,len(scal)):
+			if scal[it] == min(scal):
+				lMin.append(it)
+		# Selecting a random minimum scalar
+		random.shuffle(lMin)
+		newGroupList[lMin[0]].g.append(i)
 	if gDisplay:
 		print
 
