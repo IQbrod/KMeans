@@ -10,6 +10,7 @@ class Group:
 		self.r = rep	# Representing Group
 		self.g = col	# Real Collection
 
+gDisplay = 0
 gEXT = ".txt"
 gREP = "files/"
 
@@ -68,7 +69,7 @@ for i in range(0,len(repMatrix)):
 print
 	
 # -- Initialization
-print "STEP 0:"
+print "Initialization:"
 C = [i for i in range(lPageSize)] # Random pages of C will initialize K
 newGroupList = []
 for i in range(0,gK): # Create K Groups
@@ -78,12 +79,12 @@ for i in range(0,gK): # Create K Groups
 	C = C[1:]
 		
 	print "Group"+str(i)+" => Doc"+str(newGroupList[i].g[0])
-	print "R:",newGroupList[i].r
 print
 
 counter = 1
 while True: #DO WHILE
-	print "STEP "+str(counter)+":"
+	if gDisplay:	
+		print "## STEP "+str(counter)+":"
 	counter += 1
 	# -- Storing the current GList
 	old = newGroupList
@@ -106,9 +107,11 @@ while True: #DO WHILE
 		scal = [math.sqrt(p) for p in scal]
 	
 		# Append doc to the most similar group	
-		print "Doc"+str(i)+" => Group"+str(scal.index(min(scal)))
-		newGroupList[scal.index(min(scal))].g.append(i)
-	print
+		if gDisplay:
+			print "Doc"+str(i)+" => Group"+str(scal.index(min(scal)))
+		newGroupList[scal.index(min(scal))].g.append(i) #Modify minimum finding
+	if gDisplay:
+		print
 
 	# -- Calculing new representant
 	for i in range(0,len(newGroupList)): #For Each Group
@@ -116,9 +119,11 @@ while True: #DO WHILE
 		for j in range(0,len(newGroupList[i].g)): #For Each Document of the Group
 			newGroupList[i].r = [a_elt + b_elt for a_elt, b_elt in zip(newGroupList[i].r, repMatrix[newGroupList[i].g[j]])]
 		newGroupList[i].r = [it/len(newGroupList[i].g) for it in newGroupList[i].r]
-		print "Group"+str(i)+":",newGroupList[i].g
-		print "R:",newGroupList[i].r
-	print
+		if gDisplay:
+			print "Group"+str(i)+":",newGroupList[i].g
+			print "R:",newGroupList[i].r
+	if gDisplay:
+		print
 
 	### WHILE BREAK POINT ###
 	bp = True
@@ -126,3 +131,8 @@ while True: #DO WHILE
 		bp = bp and all( (a_elt-b_elt) == 0 for a_elt, b_elt in zip(old[i].r,newGroupList[i].r) )
 	if bp:
 		break
+## Display last groups
+print "Final Groups:"
+for i in range(0,len(newGroupList)):
+	print "Group"+str(i)+":",newGroupList[i].g
+	print "R:",newGroupList[i].r
