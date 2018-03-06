@@ -5,6 +5,8 @@ import math
 from sklearn.datasets import load_iris
 # GRAPHICAL IMPORTS
 import matplotlib.pyplot as plt
+import matplotlib.cm as cm
+import numpy as np
 from sklearn.decomposition import PCA
 
 class ArgError(Exception):
@@ -129,12 +131,22 @@ for i in range(0,len(newGroupList)):
 #2D Projection with PCA
 pca = PCA(n_components=2)
 mat = pca.fit(repMatrix).transform(repMatrix)
+#Grouping Docs X and Y
+arr = []
+for i in range(0,len(newGroupList)): #For Each Group
+	xi = []
+	yi = []
+	for f in newGroupList[i].g: #For Each Doc
+		xi.append(mat[f,0])
+		yi.append(mat[f,1])
+	arr.append(xi)
+	arr.append(yi)
 #Display Clusters
+colors = iter(cm.rainbow(np.linspace(0, 1, len(newGroupList)))) #Colors for clusters
 target_names = range(len(newGroupList)) #Label for clusters
 plt.figure()
 for i in range(0,len(newGroupList)): #For each group
-	for f in newGroupList[i].g: #For each doc
-		plt.scatter(mat[f,0], mat[f, 1])
+	plt.scatter(arr[2*i], arr[2*i+1], label=target_names[i], color=next(colors))
 plt.legend(loc='best')
 plt.title('KMeans on IRIS')
 plt.show()
